@@ -1,0 +1,17 @@
+.toolchain/
+.venv/
+backend/.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.pyc
+.env
+**/.env
+*.db
+**/*.db
+data/
+.DS_Store
+.streamlit/
+uv.lock.bak

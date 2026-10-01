@@ -1,0 +1,46 @@
+services:
+  api:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DEBUG: "true"
+      SECRET_KEY: ${SECRET_KEY:-dev-only-change-me-not-for-production}
+      DATABASE_URL: sqlite+aiosqlite:////app/data/helix.db
+      INFERENCE_PROVIDER: ${INFERENCE_PROVIDER:-ollama}
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-smollm2:135m}
+      OLLAMA_API_KEY: ollama
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-qwen/qwen3.8-27b}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-4-5}
+      CORS_ORIGINS: http://localhost:8501,http://127.0.0.1:8501
+      RATE_LIMIT_RPM: ${RATE_LIMIT_RPM:-30}
+      DAILY_TOKEN_BUDGET: ${DAILY_TOKEN_BUDGET:-20000}
+    volumes:
+      - helix-data:/app/data
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+
+  ui:
+    build:
+      context: ./ui
+    ports:
+      - "8501:8501"
+    environment:
+      HELIX_API_URL: http://api:8000
+    depends_on:
+      - api
+
+volumes:
+  helix-data:
+  ollama-data:
