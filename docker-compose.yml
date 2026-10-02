@@ -14,8 +14,6 @@ services:
       OLLAMA_API_KEY: ollama
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       GROQ_MODEL: ${GROQ_MODEL:-qwen/qwen3.8-27b}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-haiku-4-5}
       CORS_ORIGINS: http://localhost:8501,http://127.0.0.1:8501
       RATE_LIMIT_RPM: ${RATE_LIMIT_RPM:-30}
       DAILY_TOKEN_BUDGET: ${DAILY_TOKEN_BUDGET:-20000}

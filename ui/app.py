@@ -7,7 +7,7 @@ API_URL = os.getenv("HELIX_API_URL", "http://127.0.0.1:8000").rstrip("/")
 
 st.set_page_config(page_title="Helix", layout="wide")
 st.title("Helix")
-st.caption("Inference gateway — Ollama, Groq, or Anthropic Claude")
+st.caption("Inference gateway — Ollama or Groq")
 
 
 def call(method: str, path: str, token: str | None = None, payload: dict | None = None):

@@ -4,7 +4,7 @@ from app.providers.base import InferenceProvider
 from app.providers.factory import build_provider
 from app.schemas.inference import ProviderOption, ProviderStatus
 
-_KNOWN = {"ollama", "groq", "anthropic", "openai_compatible"}
+_KNOWN = {"ollama", "groq", "openai_compatible"}
 
 
 def list_provider_options(settings: Settings) -> list[ProviderOption]:
@@ -20,12 +20,6 @@ def list_provider_options(settings: Settings) -> list[ProviderOption]:
             label="Groq (free API)",
             model=settings.groq_model,
             configured=bool(settings.groq_api_key.strip()),
-        ),
-        ProviderOption(
-            name="anthropic",
-            label="Anthropic (Claude)",
-            model=settings.anthropic_model,
-            configured=bool(settings.anthropic_credential),
         ),
     ]
     if settings.openai_base_url.strip() and settings.openai_model.strip():
@@ -57,12 +51,6 @@ async def switch_runtime_provider(app: object, provider: ProviderName) -> Infere
         if provider == "groq":
             raise SchemaViolation(
                 "Groq is not configured. Set GROQ_API_KEY in backend/.env and restart once."
-            )
-        if provider == "anthropic":
-            raise SchemaViolation(
-                "Claude is not configured. Set ANTHROPIC_AUTH_TOKEN (ICA) or "
-                "ANTHROPIC_API_KEY in backend/.env, set ANTHROPIC_BASE_URL if needed, "
-                "and restart once."
             )
         raise SchemaViolation(f"Provider '{provider}' is not configured.")
 

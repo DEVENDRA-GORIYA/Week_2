@@ -132,8 +132,8 @@ Authenticated. Returns the active backend and the options this server can use.
 
 ```json
 {
-  "active": "anthropic",
-  "model": "claude-haiku-4-5",
+  "active": "groq",
+  "model": "qwen/qwen3.8-27b",
   "ready": true,
   "options": [
     {
@@ -147,28 +147,22 @@ Authenticated. Returns the active backend and the options this server can use.
       "label": "Groq (free API)",
       "model": "qwen/qwen3.8-27b",
       "configured": true
-    },
-    {
-      "name": "anthropic",
-      "label": "Anthropic (Claude)",
-      "model": "claude-haiku-4-5",
-      "configured": true
     }
   ]
 }
 ```
 
-`configured` is false for Groq when `GROQ_API_KEY` is missing, and false for Claude when `ANTHROPIC_API_KEY` is missing.
+`configured` is false for Groq when `GROQ_API_KEY` is missing.
 
 ### `PUT /api/v1/provider`
 
 Authenticated. Switches the live provider without restarting the process.
 
 ```json
-{"provider": "anthropic"}
+{"provider": "groq"}
 ```
 
-Allowed values: `ollama`, `groq`, `anthropic`, and `openai_compatible` when configured.
+Allowed values: `ollama`, `groq`, and `openai_compatible` when configured.
 
 Response shape matches `GET /provider`. The change lasts until the API process exits; the next cold start still uses `INFERENCE_PROVIDER` from `.env`.
 

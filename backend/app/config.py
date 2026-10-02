@@ -5,7 +5,7 @@ from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEV_SECRET = "dev-only-change-me-not-for-production"
-ProviderName = Literal["ollama", "groq", "anthropic", "openai_compatible"]
+ProviderName = Literal["ollama", "groq", "openai_compatible"]
 
 
 class Settings(BaseSettings):
@@ -36,17 +36,6 @@ class Settings(BaseSettings):
     groq_api_key: str = ""
     groq_model: str = "qwen/qwen3.8-27b"
     groq_base_url: str = "https://api.groq.com/openai/v1"
-
-    anthropic_api_key: str = ""
-    anthropic_auth_token: str = ""
-    anthropic_model: str = "claude-haiku-4-5"
-    anthropic_base_url: str = "https://api.anthropic.com"
-    anthropic_api_version: str = "2023-06-01"
-
-    @property
-    def anthropic_credential(self) -> str:
-        """ICA uses ANTHROPIC_AUTH_TOKEN; public Anthropic uses ANTHROPIC_API_KEY."""
-        return (self.anthropic_auth_token or self.anthropic_api_key).strip()
 
     openai_base_url: str = ""
     openai_api_key: str = ""

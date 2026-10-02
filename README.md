@@ -1,6 +1,6 @@
 # Helix
 
-Helix is a containerized FastAPI inference microservice. It exposes versioned API contracts for chat, structured extraction, and tool calls. Routes are protected with JWT. Request and response bodies use Pydantic v2. Models run locally with Ollama, or through a hosted API such as Groq or Anthropic (including IBM ICA).
+Helix is a containerized FastAPI inference microservice. It exposes versioned API contracts for chat, structured extraction, and tool calls. Routes are protected with JWT. Request and response bodies use Pydantic v2. Models run locally with Ollama, or through a hosted free-tier API such as Groq.
 
 ```text
 ┌──────────────┐   HTTP + JWT    ┌─────────────────────┐
@@ -13,7 +13,7 @@ Helix is a containerized FastAPI inference microservice. It exposes versioned AP
                           ▼                 ▼                  ▼
                     SQLite users      Per-user rate       Model providers
                     + usage events    limit and daily     Ollama / Groq /
-                                      token budget        Anthropic (ICA)
+                                      token budget        OpenAI-compatible
 ```
 
 The API image does not bundle model weights. Inference runs in a separate process or remote API so providers can be swapped without rebuilding the service.
@@ -39,7 +39,7 @@ The API image does not bundle model weights. Inference runs in a separate proces
 | Layer | Technology |
 |-------|------------|
 | API | FastAPI · Pydantic v2 · SQLAlchemy 2 · JWT · bcrypt |
-| Model providers | Ollama · Groq · Anthropic / ICA · OpenAI-compatible |
+| Model providers | Ollama · Groq · OpenAI-compatible |
 | UI | Streamlit · requests |
 | Data | SQLite (users and usage events) |
 | Tooling | uv · ruff · pytest · Docker multi-stage · GitHub Actions · pre-commit |
@@ -56,7 +56,7 @@ The API image does not bundle model weights. Inference runs in a separate proces
 │   ├── models/          # users, usage events
 │   ├── schemas/         # Pydantic v2 request and response contracts
 │   ├── services/        # auth, inference loop, usage accounting
-│   ├── providers/       # model clients (Ollama/Groq/Anthropic)
+│   ├── providers/       # model clients (Ollama / Groq / OpenAI-compatible)
 │   ├── prompts/         # reusable prompt catalog
 │   └── tools/           # sandboxed tool registry
 ├── ui/app.py            # Streamlit client
@@ -107,27 +107,7 @@ GROQ_MODEL=qwen/qwen3.8-27b
 
 Confirm the model id in the Groq console. Names on the free tier can change.
 
-### Anthropic / IBM ICA
-
-**IBM Consulting Advantage gateway:**
-
-```bash
-ANTHROPIC_BASE_URL=https://api.nextgen-beta.ica.ibm.com/ica
-ANTHROPIC_AUTH_TOKEN=sk-your-ica-api-key
-ANTHROPIC_MODEL=claude-haiku-4-5
-```
-
-Use an ICA API key (`sk-...`). Helix calls `{BASE_URL}/v1/messages`, so do not append `/v1` to `ANTHROPIC_BASE_URL`.
-
-**Public Anthropic:**
-
-```bash
-ANTHROPIC_BASE_URL=https://api.anthropic.com
-ANTHROPIC_API_KEY=sk-ant-your-key
-ANTHROPIC_MODEL=claude-haiku-4-5
-```
-
-Restart the API after changing keys. Switch among Ollama, Groq, and Anthropic with `PUT /api/v1/provider` or the Streamlit sidebar.
+Restart the API after changing keys. Switch between Ollama and Groq with `PUT /api/v1/provider` or the Streamlit sidebar.
 
 ### Any OpenAI-compatible server
 
@@ -203,11 +183,9 @@ Copy `backend/.env.example` to `backend/.env`.
 | `DEBUG` | When false, the development secret is rejected |
 | `ADMIN_EMAILS` | Comma-separated emails that register as `admin` |
 | `DATABASE_URL` | Async SQLite URL |
-| `INFERENCE_PROVIDER` | `ollama`, `groq`, `anthropic`, or `openai_compatible` |
+| `INFERENCE_PROVIDER` | `ollama`, `groq`, or `openai_compatible` |
 | `OLLAMA_BASE_URL` / `OLLAMA_MODEL` | Local model server |
 | `GROQ_API_KEY` / `GROQ_MODEL` | Groq API |
-| `ANTHROPIC_API_KEY` / `ANTHROPIC_AUTH_TOKEN` / `ANTHROPIC_MODEL` | Anthropic or ICA credentials |
-| `ANTHROPIC_BASE_URL` | e.g. `https://api.anthropic.com` or ICA `https://api.nextgen-beta.ica.ibm.com/ica` |
 | `OPENAI_BASE_URL` / `OPENAI_MODEL` | Generic OpenAI-compatible server |
 | `RATE_LIMIT_RPM` | Per-user requests per minute (this process only) |
 | `DAILY_TOKEN_BUDGET` | Per-user tokens per UTC day |

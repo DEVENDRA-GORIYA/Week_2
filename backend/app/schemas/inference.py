@@ -165,7 +165,7 @@ class ModelInfo(BaseModel):
 class ProviderOption(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    name: Literal["ollama", "groq", "anthropic", "openai_compatible"]
+    name: Literal["ollama", "groq", "openai_compatible"]
     label: str
     model: str
     configured: bool
@@ -174,7 +174,7 @@ class ProviderOption(BaseModel):
 class ProviderStatus(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    active: Literal["ollama", "groq", "anthropic", "openai_compatible"]
+    active: Literal["ollama", "groq", "openai_compatible"]
     model: str
     ready: bool
     options: list[ProviderOption]
@@ -183,4 +183,4 @@ class ProviderStatus(BaseModel):
 class ProviderSwitchRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    provider: Literal["ollama", "groq", "anthropic", "openai_compatible"]
+    provider: Literal["ollama", "groq", "openai_compatible"]

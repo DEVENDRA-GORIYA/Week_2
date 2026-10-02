@@ -30,10 +30,9 @@ A local open model is the default, but the weights and the runtime (Ollama) are 
 
 - Ollama on the laptop or in Compose (`INFERENCE_PROVIDER=ollama`)
 - Groq's free tier (`INFERENCE_PROVIDER=groq`)
-- Anthropic Claude via the native Messages API (`INFERENCE_PROVIDER=anthropic`)
 - Any other OpenAI-compatible server (`INFERENCE_PROVIDER=openai_compatible`)
 
-`OpenAICompatibleProvider` and `AnthropicProvider` are the outbound clients. Routes never import a vendor SDK. FastAPI injects the active provider through `app.state` and `Depends`, so tests replace it with a scripted double and never download a model.
+`OpenAICompatibleProvider` is the outbound client. Routes never import a vendor SDK. FastAPI injects the active provider through `app.state` and `Depends`, so tests replace it with a scripted double and never download a model.
 
 ## Backend layers
 

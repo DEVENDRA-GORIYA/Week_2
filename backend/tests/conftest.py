@@ -23,8 +23,6 @@ def open_client(
     monkeypatch.setenv("DEBUG", "true")
     monkeypatch.setenv("INFERENCE_PROVIDER", "ollama")
     monkeypatch.setenv("GROQ_API_KEY", "")
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "")
-    monkeypatch.setenv("ANTHROPIC_AUTH_TOKEN", "")
     monkeypatch.setenv("OLLAMA_MODEL", "smollm2:135m")
     for key, value in env.items():
         monkeypatch.setenv(key, value)
@@ -38,8 +36,6 @@ def open_client(
             fake.model = settings.ollama_model
         elif settings.inference_provider == "groq":
             fake.model = settings.groq_model
-        elif settings.inference_provider == "anthropic":
-            fake.model = settings.anthropic_model
         else:
             fake.model = settings.openai_model or "compat-model"
         return fake
